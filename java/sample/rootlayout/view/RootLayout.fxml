@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.paint.*?>
+<?import java.lang.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.rootlayout.view.RootLayoutController">
+   <children>
+      <AnchorPane fx:id="mainAnchorpane" prefHeight="400.0" prefWidth="600.0" style="-: url('E:\\JAVAFX\\kafka\\java\\sample\\rootlayout\\view\\resources\\logbackground.jpg');" stylesheets="@my.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Button fx:id="connectButton" layoutX="462.0" layoutY="310.0" mnemonicParsing="false" onMouseClicked="#connectButtonPress" prefHeight="41.0" prefWidth="116.0" stylesheets="@my.css" text="连 接" textFill="WHITE" AnchorPane.bottomAnchor="49.0" AnchorPane.rightAnchor="22.0">
+               <font>
+                  <Font name="Agency FB Bold" size="21.0" />
+               </font></Button>
+            <HBox layoutX="104.0" layoutY="83.0" prefHeight="40.0" prefWidth="345.0">
+               <children>
+                  <Label prefHeight="40.0" prefWidth="96.0" text="IP地址">
+                     <font>
+                        <Font size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="ipTextField" prefHeight="40.0" prefWidth="250.0" text="192.168.0.110">
+                     <font>
+                        <Font size="17.0" />
+                     </font></TextField>
+               </children>
+            </HBox>
+            <HBox layoutX="104.0" layoutY="150.0" prefHeight="40.0" prefWidth="345.0">
+               <children>
+                  <Label prefHeight="40.0" prefWidth="96.0" text="端口号">
+                     <font>
+                        <Font size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="portTextField" prefHeight="40.0" prefWidth="250.0" text="9092">
+                     <font>
+                        <Font size="17.0" />
+                     </font></TextField>
+               </children>
+            </HBox>
+            <HBox layoutX="99.0" layoutY="233.0" prefHeight="40.0" prefWidth="345.0">
+               <children>
+                  <Label prefHeight="40.0" prefWidth="96.0" text="主    题">
+                     <font>
+                        <Font size="21.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="topicCombox" prefHeight="40.0" prefWidth="257.0" promptText="按“点我”获取主题" />
+               </children>
+            </HBox>
+            <Label fx:id="appNameLabel" contentDisplay="CENTER" layoutX="146.0" layoutY="10.0" prefHeight="60.0" prefWidth="355.0" style="-fx-font-size: 45; -fx-font-weight: bold;" stylesheets="@my.css" text="Kafka 登 陆" textAlignment="CENTER" textOverrun="CLIP" AnchorPane.bottomAnchor="330.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Label>
+            <Label fx:id="ipLabel" layoutX="451.0" layoutY="93.0" prefHeight="20.0" prefWidth="127.0" style="-fx-text-fill: #FF0000;" />
+            <Label fx:id="portLabel" layoutX="462.0" layoutY="160.0" prefHeight="20.0" prefWidth="116.0" style="-fx-text-fill: #FF0000;" />
+            <Label fx:id="topicLable" layoutX="191.0" layoutY="206.0" prefHeight="20.0" prefWidth="239.0" style="-fx-text-fill: #FF0000;" />
+            <Button fx:id="checkButton" layoutX="462.0" layoutY="150.0" mnemonicParsing="false" onMouseClicked="#checkButtonAction" prefHeight="70.0" prefWidth="116.0" stylesheets="@my.css" text="点  我" textFill="#518549" AnchorPane.rightAnchor="22.0">
+               <font>
+                  <Font name="Agency FB" size="21.0" />
+               </font></Button>
+            <HBox layoutX="96.0" layoutY="306.0" prefHeight="49.0" prefWidth="345.0">
+               <children>
+                  <Label prefHeight="40.0" prefWidth="157.0" text="消费者组">
+                     <font>
+                        <Font size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="groupidTextField" prefHeight="41.0" prefWidth="312.0" text="app20">
+                     <font>
+                        <Font size="17.0" />
+                     </font></TextField>
+               </children>
+            </HBox>
+         </children></AnchorPane>
+   </children>
+</AnchorPane>

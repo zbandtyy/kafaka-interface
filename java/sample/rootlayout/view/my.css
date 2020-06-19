@@ -1,0 +1,63 @@
+.text-field{
+/*#F0FFF0*/
+     -fx-background-color:rgba(90%,100%,90%,0.3) ;
+      -fx-text-fill:#EE1289;
+
+}
+.combo-box .cell{
+    -fx-text-fill: #EE1289;
+    -fx-font-size: 17px;
+
+}
+.combo-box {
+    -fx-background-color:rgba(90%,100%,90%,0.3) ;
+
+
+}
+#checkButton{
+    -fx-text-fill:#FFFFFF;
+    -fx-border-radius: 70;
+    -fx-background-radius: 70;
+    -fx-pref-width: 116px;
+    -fx-pref-height: 40px;
+    -fx-padding: 6 6 6 6;
+    -fx-background-color:#FF83FA;
+   /* -fx-background-color: linear-gradient(#61a2b1, #2A5058);*/
+    -fx-effect: dropshadow(three-pass-box, #698B22, 10.0,0, 0,5);
+    -fx-cursor: hand;
+  }
+/*它用在当用户将鼠标悬停在按钮上时 hover:悬挂*/
+#checkButton:hover{
+   -fx-background-color:#FF00FF;
+ /*linear-gradient(#2A5058, #61a2b1);*/
+}
+#appNameLabel{
+    -fx-text-fill:#FF0000;
+    -fx-effect: dropshadow(three-pass-box,#666666, 8,0, 0,4);
+}
+#connectButton{
+        -fx-background-color: #41eae0;
+        -fx-background-radius: 8;
+        -fx-border-radius: 8;
+         -fx-cursor: hand;
+         -fx-effect: dropshadow(three-pass-box,#698B22 , 10.0,0, 0,5);
+
+}
+#connectButton:pressed{
+    -fx-background-color:#FFFFFF ;
+}
+#connectButton:hover{
+    -fx-background-color:#458B74 ;
+}
+#mainAnchorpane{
+    -fx-background-image:url('resources/log2.jpg');
+    -fx-background-size:cover
+
+}
+
+.split-pane *.split-pane-divider {
+/*    Node divider = split.lookup(".split-pane-divider");
+*/
+    -fx-padding: 0 2 0 2; /* 0 3 0 3 */
+
+}

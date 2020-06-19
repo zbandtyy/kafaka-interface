@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="mainInterface" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.rootlayout.view.VideoAndLabelController">
+   <children>
+      <SplitPane dividerPositions="0.7953020134228188" layoutX="175.0" layoutY="79.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" stylesheets="@my.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <AnchorPane fx:id="videoAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="233.0" prefWidth="300.0">
+               <children>
+                  <ImageView fx:id="imageView" layoutX="2.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true" />
+               </children></AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="78.0" prefWidth="298.0">
+               <children>
+                  <Button fx:id="keyLabelButton" layoutX="-2.0" layoutY="-4.0" mnemonicParsing="false" onMouseClicked="#showBigVideo" prefHeight="57.0" prefWidth="300.0" style="-fx-background-color: transparent;" text="Video-01" textAlignment="CENTER" textFill="#12e153" underline="true">
+                     <font>
+                        <Font size="22.0" />
+                     </font></Button>
+               </children></AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
