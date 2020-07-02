@@ -1,14 +1,19 @@
 package sample.rootlayout.model;
 import com.google.gson.Gson;
+import javafx.beans.property.SimpleStringProperty;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 /**
  * Java Bean to hold JSON message
  * 输入数据 和 车辆跟踪的结果数据
  * @author abaghel
  *
  */
-public class VideoEventData implements Serializable {
+public class VideoEventData {
 
 	private String cameraId;
 
@@ -82,15 +87,40 @@ public class VideoEventData implements Serializable {
 		 *  json：被解析的 json 字符串
 		 *  classOfT：解析结果的类型，可以是基本类型，也可以是 POJO 对象类型，gson 会自动转换
 		 */
+
 		VideoEventData p = gson.fromJson(data, VideoEventData.class);
 		return p;
 	}
 
+	@Override
+	public String toString() {
+		return "VideoEventData{" +
+				"cameraId='" + cameraId + '\'' +
+				", timestamp=" + timestamp +
+				", rows=" + rows +
+				", cols=" + cols +
+				", type=" + type +
+				", data== null'" + Boolean.toString(data == null) + '\'' +
+				'}';
+	}
+
+	public String cvt2String() {
+		SimpleDateFormat d = new SimpleDateFormat("MM-dd hh:mm:ss:SSS");
+		return "VideoEventData{" +
+				"cameraId='" + cameraId + '\'' +
+				", timestamp=" + d.format(timestamp) +
+				", rows=" + rows +
+				", cols=" + cols +
+				", type=" + type +
+				'}';
+	}
 	public static void main(String[] args) {
 		VideoEventData data = new VideoEventData("vid",new Timestamp(12345),3,4,3,"data");
 		String s = data.toJson();
 		System.out.println(s);
-		VideoEventData d = data.fromJson(s);
+
+
+		VideoEventData d = VideoEventData.fromJson("{\"s\":\"vid\",\"s2\":\"Jan 1, 1970 8:00:12 AM\",\"s3\":3,\"s4\":4}");
 		System.out.println(d);
 	}
 }

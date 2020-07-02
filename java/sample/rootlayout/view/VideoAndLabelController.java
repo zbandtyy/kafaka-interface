@@ -38,6 +38,20 @@ public class VideoAndLabelController  {
     public ObservableList<Image> getImgList() {
         return imgList;
     }
+    private SimpleStringProperty Info = new SimpleStringProperty();//保存非帧的信息
+
+    public String getInfo() {
+        return Info.get();
+    }
+
+    public SimpleStringProperty infoProperty() {
+        return Info;
+    }
+
+    public void setInfo(String info) {
+        this.Info.set(info);
+    }
+
     private ObservableList<Image>  imgList = FXCollections.observableArrayList();
     @FXML
     public AnchorPane mainInterface;//追界面
@@ -79,6 +93,7 @@ public class VideoAndLabelController  {
     public void initialize(){
 
         VideoAndLabelController mycontroller = this;
+        //所有的小框都有图片追加进来时，都会调用该函数，如果是选中的小框频，那么就会吧对应的帧加入大视频框中
         imgList.addListener(new ListChangeListener<Image>() {
             @Override
             public void onChanged(Change<? extends Image> c) {
@@ -91,6 +106,7 @@ public class VideoAndLabelController  {
                                 (VideoShowPageData.selection.get().isEmpty() &&
                                         VideoShowPageData.getglobalList().get(0)._2 == mycontroller)) {
                             VideoShowPageData.bigVideo.add(img);
+                            VideoShowPageData.bigVideoInfo.setValue(infoProperty().getValue());
                         }
                         imageView.setFitHeight(videoAnchor.getHeight());
                         imageView.setFitWidth(videoAnchor.getWidth());

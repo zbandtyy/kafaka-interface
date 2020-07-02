@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
@@ -14,10 +15,19 @@
                   <ListView fx:id="videolistView" layoutX="-1.0" layoutY="46.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
-          <AnchorPane fx:id="bigVideoAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="800.0" prefWidth="800.0" style="-: transparent;">
+          <AnchorPane fx:id="bigVideoAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="800.0" prefWidth="800.0" style="-: transparent;">
                <children>
-                  <ImageView fx:id="imageView" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 1;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  <Label alignment="TOP_RIGHT" contentDisplay="CENTER" layoutX="220.0" layoutY="637.0" prefHeight="108.0" prefWidth="448.0" text="VideoInfofd " />
+                  <ImageView fx:id="imageView" fitHeight="419.0" fitWidth="777.0" layoutX="12.0" layoutY="138.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 1;" AnchorPane.bottomAnchor="243.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="11.0" AnchorPane.topAnchor="138.0" />
+                  <TextArea fx:id="VideoInfoTxtArea" layoutX="-94.0" layoutY="570.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="766.0" promptText="VideoInfo" text="异常信息输出" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <font>
+                        <Font name="Agency FB" size="19.0" />
+                     </font>
+                  </TextArea>
+                  <Label fx:id="bigVideoInfo" layoutX="20.0" layoutY="34.0" prefHeight="62.0" prefWidth="741.0" text="InFo" textFill="#e41717">
+                     <font>
+                        <Font name="Agency FB" size="18.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
         </items>

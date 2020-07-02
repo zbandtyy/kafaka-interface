@@ -4,12 +4,10 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.scene.Node;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
-import sample.rootlayout.view.VideoAndLabelController;
+import org.slf4j.Logger;
 import scala.Tuple2;
 
 import java.util.*;
@@ -42,14 +40,30 @@ public class KafkaMsg {
                     for (Tuple2<String, VideoEventData> data:newedit){
                             //转交给控制器进行显示
                         VideoEventData ed = data._2;
+                        if(ed == null){
+                            VideoShowPageData.ImageorOtherInfo.add("not get data\n");
+                        }
+                        else if(ed.getData() == null){
+                            VideoShowPageData.ImageorOtherInfo.add(ed + "get message but not have image\n");
+                            continue;
+                        }
+
                         Mat frame = new Mat(ed.getRows(), ed.getCols(), ed.getType());
-                        frame.put(0, 0, Base64.getDecoder().decode(ed.getData()));
+                        byte[] pic = Base64.getDecoder().decode(ed.getData());
+                        if(pic.length % frame.channels() != 0 ){
+                            String str = " Noted data is not good," + " because provided data element number "+ pic.length +"should be " +
+                                    "multiple of the Mat channels count = " +frame.channels() +"\n";
+                            VideoShowPageData.ImageorOtherInfo.add(ed + str);
+                            continue;
+                        }
+                        frame.put(0, 0, pic);
                         MatOfByte mob = new MatOfByte();
                         imencode(".jpg", frame, mob);
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
-                                VideoShowPageData.setImage(data._1, mob.toArray());
+                                //当data._1为空时，会失败，否则会将图片加入对应的小视频框图中
+                                VideoShowPageData.setImageandInfo(ed, mob.toArray());
                             }
                         });
                     }
@@ -62,7 +76,16 @@ public class KafkaMsg {
     //解析接收到得所有数据 将rawData 变换为 resolveData  //将resolved Data 进行显示
     public  void resolve(Tuple2<String,String>income){
         //解析并且添加到了resultData中
-            Tuple2<String, VideoEventData> outData = new Tuple2<String, VideoEventData>(income._1,VideoEventData.fromJson(income._2));
+            if(income._1 == null){//key值为null
+                VideoShowPageData.ImageorOtherInfo.add(new Date() + ": (null" +"," + income._2 + ")\n");
+                return;
+            }
+            VideoEventData ed =  VideoEventData.fromJson(income._2);
+            if(ed.getCameraId() == null && ed.getData() == null && ed.getTimestamp() == null){
+                VideoShowPageData.ImageorOtherInfo.add(new Date() + ": The data is not satisfy VideoEvent data form!(" +income._1 + ","+ income._2 +")\n");
+                return;
+            }
+            Tuple2<String, VideoEventData> outData = new Tuple2<String, VideoEventData>(income._1,ed);
             resultData.add(outData);
 
 

@@ -29,7 +29,7 @@ public class KafkaAdmin {
         //创建一个实例
         Properties properties = new Properties();
         properties.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG,brokerUrl);
-        properties.put(CommonClientConfigs.REQUEST_TIMEOUT_MS_CONFIG,"15000");
+        properties.put(CommonClientConfigs.REQUEST_TIMEOUT_MS_CONFIG,"1000");
         admin = AdminClient.create(properties);
 
     }

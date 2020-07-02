@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -25,6 +26,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import sample.rootlayout.model.KafkaAdmin;
 import sample.rootlayout.model.KafkaMsgConsumer;
@@ -65,24 +67,10 @@ public class MainApp extends Application {
         }
 
     }
-
+    //显示读取并且显示数据的页面，并且创建后台线程读取消息
     public void showVideoPage(KafkaMsgConsumer kafkaMsgConsumer){
-        //1.显示主界面
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("rootlayout/view/MaintainInterface.fxml"));
-        AnchorPane page = null;
-        try {
-
-            page = (AnchorPane) loader.load();
-            Scene scene = new Scene(page);
-            primaryStage.titleProperty().bind(kafkaMsgConsumer.getAllConfig());
-            primaryStage.setScene(scene);
-            primaryStage.setResizable(false);
-            primaryStage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //2.创建后台线程处理kafka数据
+        //1.创建后台线程处理kafka数据
+        Thread rcvDataThread = null;
         Task<Integer> task = new Task<Integer>() {
             @Override
             protected Integer call()  {
@@ -91,15 +79,44 @@ public class MainApp extends Application {
                 return  0;
             }
         };
-        Thread thread = new Thread(task);
-        thread.setDaemon(true);
-        thread.start();
+        rcvDataThread = new Thread(task);
+        rcvDataThread.setDaemon(true);
+        rcvDataThread.start();
 
+        //2.显示主界面,并且对主界面进行设置
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainApp.class.getResource("rootlayout/view/MaintainInterface.fxml"));
 
+        AnchorPane page = null;
+        try {
+
+            page = (AnchorPane) loader.load();
+            Scene scene = new Scene(page);
+            primaryStage.titleProperty().bind(kafkaMsgConsumer.getAllConfig());
+
+            Thread finalRcvDataThread = rcvDataThread;
+            primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    if(finalRcvDataThread != null){
+                        finalRcvDataThread.interrupt();
+                    }
+                    Platform.runLater(()->   showRootLayout());
+
+                }
+            });
+            primaryStage.setScene(scene);
+            primaryStage.setResizable(false);
+            primaryStage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
     @Override
+    //显示登入kafka的界面
     public void start(Stage primaryStage) throws Exception{
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Kafka-tyy-test");

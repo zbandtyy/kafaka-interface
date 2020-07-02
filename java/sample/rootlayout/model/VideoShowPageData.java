@@ -25,6 +25,8 @@ public class VideoShowPageData {
             FXCollections.observableArrayList();
     //存储大图片视频的队列
     public    static ObservableList<Image> bigVideo  = FXCollections.observableArrayList();
+    public  static  SimpleStringProperty bigVideoInfo = new SimpleStringProperty();
+    public    static ObservableList<String> ImageorOtherInfo  = FXCollections.observableArrayList();//标签信息 全部显示
 
     public static  ObservableList<Tuple2<SimpleStringProperty, VideoAndLabelController>> getglobalList(){
         return smallVideoDataList;
@@ -33,6 +35,7 @@ public class VideoShowPageData {
         smallVideoDataList.add(new Tuple2<SimpleStringProperty, VideoAndLabelController>(
                 new SimpleStringProperty(text),VideoAndLabelController.getInstance()));
     }
+    //查找与text相同的controller
     private static VideoAndLabelController findController(String text){
         if(text == null || text.isEmpty() || smallVideoDataList.size() == 0){
             return null;
@@ -44,7 +47,7 @@ public class VideoShowPageData {
         }
         return  null;
     }
-    //无论如何都给你一个控制器
+    //无论如何都给你一个控制器，创建或者查找一个与text具有相同标签的 控制器（界面）
     private static  VideoAndLabelController getController(String text){
         if(text.isEmpty() || text == null){
             return  null;
@@ -59,15 +62,20 @@ public class VideoShowPageData {
         }
     }
     //对list中的图像进行设置
-    public  static  boolean  setImage(String text,byte[] img){
-
+    public  static  boolean  setImageandInfo(VideoEventData data,byte[] img){
+        String text = data.getCameraId();
         VideoAndLabelController valc =  getController(text);
+        //仅在text为空时失败
         if(valc == null){
             return false;
         }
         valc.getImgList().add(new Image(new ByteArrayInputStream(img)));
+
+
+        valc.setInfo(data.cvt2String());
         return  true;
     }
+
 
 
 

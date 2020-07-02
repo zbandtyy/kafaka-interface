@@ -19,6 +19,7 @@ public class RootLayoutController {
     public ComboBox topicCombox;
     public Label topicLable;
     public TextField groupidTextField;
+    public Button resetButton;
 
     public void setMain(MainApp main) {
         this.main = main;
@@ -36,8 +37,8 @@ public class RootLayoutController {
     boolean enableCheckClicked = true;//响应过程中只进行一次
     @FXML
     private Button checkButton;
-    
 
+    Thread queryThread = null;//查询主题的线程
     @FXML
     private void connectButtonPress(){
         if(enableCheckClicked == false) {
@@ -58,7 +59,6 @@ public class RootLayoutController {
     @FXML
     private void checkButtonAction(MouseEvent mouseEvent) {
         //1.检查IP地址
-
          final String url =  checkIPPort();
         //2.使用模型进行连接，获取主题
          if(url != null){
@@ -112,9 +112,10 @@ public class RootLayoutController {
                         admin.closeAdmin();
                     }
                 };
-                final Thread thread = new Thread(task , "kafka-query-topic");
-                thread.setDaemon(true);
-                thread.start();
+               queryThread = new Thread(task , "kafka-query-topic");
+                queryThread.setDaemon(true);
+                queryThread.start();
+
              //   main.showVideoPage();
             } catch (Exception e) {
                 topicLable.setText("无法连接到指定的IP，请确认");
@@ -150,5 +151,18 @@ public class RootLayoutController {
 
         }
         return  null;
+    }
+
+
+    public void resetBtnClicked(MouseEvent mouseEvent) {
+        if(mouseEvent.getClickCount() == 1){
+            System.out.println("you have enter reset");
+            enableCheckClicked = true;
+            ipTextField.setText("");
+            portTextField.setText("");
+            topicCombox.setItems(null);
+            queryThread.interrupt();
+
+        }
     }
 }

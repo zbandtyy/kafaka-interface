@@ -14,6 +14,18 @@
 
 
 }
+#resetButton{
+       -fx-text-fill:#FFFFFF;
+       -fx-border-radius: 40;
+       -fx-background-radius: 40;
+       -fx-pref-width: 116px;
+       -fx-pref-height: 40px;
+       -fx-padding: 6 6 6 6;
+       -fx-background-color:#FF8247;
+       -fx-effect: dropshadow(three-pass-box, #698B22, 10.0,0, 0,5);
+
+}
+
 #checkButton{
     -fx-text-fill:#FFFFFF;
     -fx-border-radius: 70;
@@ -43,6 +55,7 @@
          -fx-effect: dropshadow(three-pass-box,#698B22 , 10.0,0, 0,5);
 
 }
+
 #connectButton:pressed{
     -fx-background-color:#FFFFFF ;
 }

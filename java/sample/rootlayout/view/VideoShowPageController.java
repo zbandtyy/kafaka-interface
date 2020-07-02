@@ -1,7 +1,10 @@
 package sample.rootlayout.view;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -38,6 +41,8 @@ public class VideoShowPageController {
 
     public AnchorPane bigVideoAnchor;
     public SplitPane splitPane;
+    public TextArea VideoInfoTxtArea;
+    public Label bigVideoInfo;
 
     public AnchorPane getBigVideoAnchor() {
         return bigVideoAnchor;
@@ -88,14 +93,53 @@ public class VideoShowPageController {
                 if(c.wasAdded()){
                     List<? extends Image> imgs = c.getAddedSubList();
                     for(Image img:imgs){
+                        imageView.setFitHeight(bigVideoAnchor.getHeight());
+                        imageView.setFitWidth(bigVideoAnchor.getWidth());
+                        imageView.setPreserveRatio(true);
                         imageView.setImage(img);
-                        imageView.setTranslateX(70);
-                        imageView.setTranslateY(150);
 
                     }
                    VideoShowPageData.bigVideo.clear();
                 }
             }
+        });
+
+        VideoShowPageData.bigVideoInfo.addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                bigVideoInfo.setText(newValue);
+            }
+        });
+        //设置大视频区域内的文字
+
+        VideoShowPageData.ImageorOtherInfo.addListener(new ListChangeListener<String>() {
+
+            @Override
+            public void onChanged(Change<? extends String> c) {
+
+                int size = VideoShowPageData.ImageorOtherInfo.size();
+                if(size > 30){
+                    VideoShowPageData.ImageorOtherInfo.remove(0,15);
+                    Platform.runLater(()->{
+                        VideoInfoTxtArea.setText("");
+                        List<? extends String> strs = VideoShowPageData.ImageorOtherInfo;
+                        for (String str : strs) {
+                            VideoInfoTxtArea.appendText(str);
+                        }
+                    });
+
+                }else {
+                    boolean s = c.next();
+                    if (c.wasAdded()) {
+                        List<? extends String> strs = c.getAddedSubList();
+                        for (String str : strs) {
+                            VideoInfoTxtArea.appendText(str);
+                        }
+                    }
+                }
+
+            }
+
         });
 
         //设置显示选中的图形
@@ -126,4 +170,6 @@ public class VideoShowPageController {
         VideoShowPageController vspc = loader.getController();
         return vspc;
     }
+
+
 }
