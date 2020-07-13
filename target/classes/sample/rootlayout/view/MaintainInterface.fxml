@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="firstAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="880.0" prefWidth="1450.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.rootlayout.view.MaintainInterfaceController">
+<AnchorPane fx:id="firstAnchorPane" maxHeight="880.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1450.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.rootlayout.view.MaintainInterfaceController">
    <children>
       <BorderPane fx:id="mainBorderPane" layoutX="124.0" layoutY="48.0" prefHeight="800.0" prefWidth="1450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -20,7 +21,7 @@
                 <Menu mnemonicParsing="false" text="配置">
                      <items>
                         <MenuItem fx:id="dataBaseItem" mnemonicParsing="false" onAction="#configureDataBase" text="数据库连接配置选项" />
-                        <MenuItem fx:id="dataBaseItem1" mnemonicParsing="false" onAction="#configureDataBase" text="调试模式" />
+                        <MenuItem fx:id="debugItem" mnemonicParsing="false" onAction="#dIshowDebug" text="调试模式" />
                      </items></Menu>
                 <Menu mnemonicParsing="false" text="帮助">
                   <items>
@@ -31,10 +32,7 @@
             </MenuBar>
          </top>
          <bottom>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Button layoutX="175.0" layoutY="107.0" mnemonicParsing="false" text="Button" />
-               </children></AnchorPane>
+            <HBox fx:id="bottomAnchor" prefHeight="60.0" prefWidth="200.0" BorderPane.alignment="TOP_LEFT" />
          </bottom>
       </BorderPane>
    </children>

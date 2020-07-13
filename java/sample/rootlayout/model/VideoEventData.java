@@ -119,7 +119,6 @@ public class VideoEventData {
 		String s = data.toJson();
 		System.out.println(s);
 
-
 		VideoEventData d = VideoEventData.fromJson("{\"s\":\"vid\",\"s2\":\"Jan 1, 1970 8:00:12 AM\",\"s3\":3,\"s4\":4}");
 		System.out.println(d);
 	}

@@ -1,9 +1,13 @@
 package sample.rootlayout.view;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -13,7 +17,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.omg.Messaging.SYNC_WITH_TRANSPORT;
+import sample.MainApp;
 import sample.rootlayout.model.DataBase;
+import sample.rootlayout.model.KafkaMsgConsumer;
 
 import javax.xml.crypto.Data;
 import java.io.IOException;
@@ -33,13 +39,31 @@ public class MaintainInterfaceController {
 
     public BorderPane mainBorderPane;
     public AnchorPane firstAnchorPane;
+    public MenuItem debugItem;
+    public HBox bottomAnchor;
+    private SimpleIntegerProperty height = new SimpleIntegerProperty(800);
+
+
+
+    private KafkaMsgConsumer consumer;//接受消息的线程
+
+    public void setConsumer(KafkaMsgConsumer consumer) {
+        this.consumer = consumer;
+    }
+
+    public SimpleIntegerProperty heightProperty() {
+        return height;
+    }
 
     public void initialize() throws IOException {
+
 
        mainBorderPane.centerProperty().setValue(VideoShowPageController.getInstance().anchorPane);
         DataBaseController baseController =  DataBaseController.getInstance();
         mainBorderPane.rightProperty().setValue(baseController.firstAnchorPane);
         mainBorderPane.setPadding(new Insets(0,0,0,0));
+
+
     }
 
 
@@ -75,6 +99,21 @@ public class MaintainInterfaceController {
     }
 
 
+    public void dIshowDebug(ActionEvent actionEvent) throws IOException {
+
+        consumer.setExitConsumer(true);
+        heightProperty().setValue(910);
+        bottomAnchor.setVisible(true);
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainApp.class.getResource("rootlayout/view/DebugWindow.fxml"));
+
+        HBox rootLayout = (HBox) loader.load();
+        DebugWindowController  dwc = loader.getController();
+        dwc.setMainRcvData(consumer);
+        mainBorderPane.bottomProperty().setValue(rootLayout);
+
+
+    }
 }
 
 

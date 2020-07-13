@@ -74,13 +74,16 @@ public class KafkaMsg {
     }
     //private ObservableList<>  resolvedData //解析之后的数据存储的位置
     //解析接收到得所有数据 将rawData 变换为 resolveData  //将resolved Data 进行显示
-    public  void resolve(Tuple2<String,String>income){
+    public  void resolve(Tuple2<String,String>income,boolean debug){
         //解析并且添加到了resultData中
             if(income._1 == null){//key值为null
                 VideoShowPageData.ImageorOtherInfo.add(new Date() + ": (null" +"," + income._2 + ")\n");
                 return;
             }
             VideoEventData ed =  VideoEventData.fromJson(income._2);
+//            if(debug){
+//                DebugBufferQueue.saveData(ed);
+//            }
             if(ed.getCameraId() == null && ed.getData() == null && ed.getTimestamp() == null){
                 VideoShowPageData.ImageorOtherInfo.add(new Date() + ": The data is not satisfy VideoEvent data form!(" +income._1 + ","+ income._2 +")\n");
                 return;
@@ -90,5 +93,20 @@ public class KafkaMsg {
 
 
     }
+    public    void resolvedatas(String key ,List<VideoEventData> datas){
+        for (VideoEventData data : datas) {
+            Tuple2<String, VideoEventData> outData = new Tuple2<String, VideoEventData>(key,data);
+            resultData.add(outData);
 
+        }
+
+    }
+    public    void resolvedata(String key ,VideoEventData data){
+
+            Tuple2<String, VideoEventData> outData = new Tuple2<String, VideoEventData>(key,data);
+            resultData.add(outData);
+
+
+
+    }
 }

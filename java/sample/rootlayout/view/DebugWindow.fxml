@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="1450.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.rootlayout.view.DebugWindowController">
+   <children>
+      <TextField fx:id="kconsumerLine" prefHeight="30.0" prefWidth="340.0" promptText="Line" text="115.157.201.215:9092:video-fix:debug:1:0" />
+      <Button fx:id="okbtn" mnemonicParsing="false" onMouseClicked="#confirmBtn" prefHeight="30.0" prefWidth="66.0" text="确认" />
+      <Label prefHeight="20.0" prefWidth="44.0" />
+      <Button fx:id="ctnbtn" mnemonicParsing="false" onMouseClicked="#continueBtn" prefHeight="30.0" prefWidth="72.0" text="继续" />
+      <Label prefHeight="20.0" prefWidth="51.0" text="          " />
+      <Button fx:id="stpbtn" contentDisplay="RIGHT" mnemonicParsing="false" onMouseClicked="#stopBtn" prefHeight="30.0" prefWidth="69.0" text="暂停">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </Button>
+      <Label prefHeight="20.0" prefWidth="46.0" />
+      <Button fx:id="nxtbtn" mnemonicParsing="false" onMouseClicked="#nextBtn" prefHeight="30.0" prefWidth="69.0" text="下一帧" />
+      <Label prefHeight="20.0" prefWidth="52.0" />
+      <Button fx:id="ptrbtn" mnemonicParsing="false" onMouseClicked="#previoudBtn" text="上一帧" />
+      <Label fx:id="infoLable" prefHeight="27.0" prefWidth="558.0" text="  hint info" textFill="#da1919" />
+   </children>
+</HBox>

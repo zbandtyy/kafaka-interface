@@ -46,6 +46,8 @@ public class RootLayoutController {
             String topic = (String) topicCombox.getSelectionModel().getSelectedItem();
             String groupid = groupidTextField.getText();
             KafkaMsgConsumer kafka = new KafkaMsgConsumer(url, topic, groupid);
+            kafka.loadProperties();
+
             main.showVideoPage(kafka);
         }else{
             topicLable.setText("请先获取选择正确的主题！！！！");

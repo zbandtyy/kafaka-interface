@@ -25,9 +25,10 @@ public class KafkaMsgConsumer {
 		this.ipPort.setValue(ipPort);
 		this.topic.setValue(topic);
 		this.groupId.setValue(groupID);
-
+		System.out.println(this);
 		stateMsg = new SimpleStringProperty(this.ipPort.get() + this.topic.get()+
 				 this.groupId.get() +":暂时没有无消息");
+		loadProperties();
 	}
 	public  SimpleStringProperty getAllConfig(){
 //		return new SimpleStringProperty(this.getGroupId() +" "+
@@ -36,6 +37,16 @@ public class KafkaMsgConsumer {
 	}
 	private SimpleStringProperty stateMsg ;
 	private SimpleStringProperty groupId = new SimpleStringProperty();
+	private boolean exitConsumer = false;
+	private  boolean finished = false;
+
+	public boolean isFinished() {
+		return finished;
+	}
+
+	public void setExitConsumer(boolean exitConsumer) {
+		this.exitConsumer = exitConsumer;
+	}
 
 	public String getGroupId() {
 		return groupId.get();
@@ -79,21 +90,24 @@ public class KafkaMsgConsumer {
 	public void consumer(){
 		System.out.println("consumer subscribe "+this.getTopic());
 		KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
-
 		consumer.subscribe(Arrays.asList(this.topic.get()));
-		//TopicPartition partition0 = new TopicPartition(topic, 2);
-		//consumer.assign(Arrays.asList(partition0));
-        final int minBatchSize = 50;
-        int a  = 0;
-        boolean isReceived = false;
+		final int minBatchSize = 10;
+		int a  = 0;
+		boolean isReceived = false;
 		//创建显示界面 main
 		int commit = 0;
 		KafkaMsg kafkamsg = new KafkaMsg();
 		while (true) {
 			ConsumerRecords<String, String> records = consumer.poll(1000);
-            if(records.isEmpty() ){
-				if(a == 40 ){
+			if(records.isEmpty() ){
+				if(a == 20 ){
 					if(isReceived == true) {
+						consumer.commitSync();
+						commit = 0;
+						if(exitConsumer == true){
+							finished = true;
+							break;
+						}
 						Platform.runLater(new Runnable() {
 							@Override
 							public void run() {
@@ -107,38 +121,96 @@ public class KafkaMsgConsumer {
 				}
 				a++;
 			}else {
+
 				if (isReceived == false) {
 					Platform.runLater(new Runnable() {
-										  @Override
-										  public void run() {
-											  stateMsg.setValue(ipPort.get() + topic.get()+
-													 groupId.get() + ": 接收处理中");
-										  }
-									  });
+						@Override
+						public void run() {
+							stateMsg.setValue(ipPort.get() + topic.get()+
+									groupId.get() + ": 接收处理中");
+						}
+					});
 
 					isReceived = true;
 				}
 				for (ConsumerRecord<String, String> record : records) {
 					Tuple2<String, String> data = new Tuple2<String, String>(record.key(), record.value());
-					//转交数据给 Video Show Page进行显示  （1）进行解析  （2）转交显示
-					kafkamsg.resolve(data);//进行解析，解析成VideoEventData数据
-					commit++;
-					if (commit >= minBatchSize) {
-						consumer.commitSync();
+					//转交数据给 Video Show Page进行显示  （1）进行解析  (2)对数据进行保存，如果数据为满则等待阻塞 不会进行下一步（3）转交显示
+					kafkamsg.resolve(data,true);//
+
+				}
+				commit = commit + records.count();
+				if (commit >= minBatchSize) {//每批数据提交一次
+					consumer.commitSync();
+					commit = 0;
+					if(exitConsumer == true){
+						finished = true;
+						break;
 					}
 				}
 			}
 
 
 		}
+		consumer.close();
+
+
+	}
+
+	public void consumerPartiton(int partition,int offset){
+		System.out.println("Debug consumer subscribe "+this.getTopic());
+		KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+
+		TopicPartition p = new TopicPartition(this.getTopic(),partition);
+		consumer.assign(Arrays.asList(p));
+		consumer.seek(p,10);
+
+		final int minBatchSize = 10;
+		int a  = 0;
+		boolean isReceived = false;
+		//创建显示界面 main
+		int commit = 0;
+		while (!finished) {
+			ConsumerRecords<String, String> records = consumer.poll(1000);
+			if(!records.isEmpty() ){
+				for (ConsumerRecord<String, String> record : records) {
+					System.out.println(record.offset());
+					Tuple2<String, String> data = new Tuple2<String, String>(record.key(), record.value());
+					//转交数据给 Video Show Page进行显示  （1）进行解析  (2)对数据进行保存，如果数据为满则等待阻塞 不会进行下一步（3）转交显
+					DebugBufferQueue.saveData(VideoEventData.fromJson(data._2));
+				}
+				commit = commit + records.count();
+				if (commit >= minBatchSize) {//每批数据提交一次
+					consumer.commitSync();
+					commit = 0;
+
+				}
+				if(exitConsumer == true|| Thread.currentThread().isInterrupted()){
+					consumer.commitSync();
+					finished = true;
+					break;
+				}
+			}
+
+
+		}
+		consumer.close();
 
 	}
 
 	public static void main(String[] args) {
-		KafkaMsgConsumer msg = new KafkaMsgConsumer("192.168.0.110:9092", "video-stream-large","app3");
+		//KafkaMsgConsumer msg = new KafkaMsgConsumer("192.168.0.110:9092", "video-stream-large","app3");
+		KafkaMsgConsumer msg = new KafkaMsgConsumer("115.157.201.215:9092", "video-fix","app7");
 		msg.loadProperties();
-		msg.consumer();
+		msg.consumerPartiton(1,0);
 	}
 
-
+	@Override
+	public String toString() {
+		return "KafkaMsgConsumer{" +
+				"groupId=" + groupId +
+				", ipPort=" + ipPort +
+				", topic=" + topic +
+				'}';
+	}
 }
