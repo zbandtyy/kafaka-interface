@@ -28,7 +28,7 @@
 
 ## 基础解析数据格式：
 
-###  目前默认支持的的数据格式为： 
+###  目前默认支持的的数据格式为：
 
 ​	（1）JsonObject(rows cols type data)-----kafka---->stringserialize(JsonObject(VideoEventData))
 
@@ -64,7 +64,7 @@ public class VideoEventData  implements Serializable {
 }
 ```
 
-###  服务器上KryoCollector存储的数据：	
+###  服务器上KryoCollector存储的数据：
 
 ​	1. 传输的是VideoEventData结构，图象保存再jpgImageBytes中，并且jpgImagebytes保存的是经过imencode编码的数据
 
@@ -83,11 +83,11 @@ public class VideoEventData  implements Serializable {
 			obj.setJpgImageBytes(data);
 ```
 
-### 服务器上存储的collector-1920-1080： 
+### 服务器上存储的collector-1920-1080：
 
 Json封装的数据，对象的类为JsonObject,其中所有的图片json数据分为两种其数据都直接保存再data中，并且使用base.64进行封装：
 
-​	   **(1) jpgImageBytes中存储的是经过imencode编码的数据** 
+​	   **(1) jpgImageBytes中存储的是经过imencode编码的数据**
 
 ```java
 MatOfByte buf = new MatOfByte();
@@ -154,7 +154,7 @@ public byte[] getImagebytes() {
 
 VideoEventData---kafka-> VideoEventDataKryoDeSerializer(VideoEventData)
 
-配置的界面设置：即可内部代码会把properties进行自动替换，并且执行不同的消费者程序 
+配置的界面设置：即可内部代码会把properties进行自动替换，并且执行不同的消费者程序
 
 ​	<img src="kafka界面.assets/image-20200804002307593.png" alt="image-20200804002307593" style="zoom:33%;" /><img src="kafka界面.assets/image-20200804002327743.png" alt="image-2020080400232773" style="zoom:50%;" />
 
@@ -186,7 +186,7 @@ ed.getImagebytes()
 
 
 
-​	
+​
 
 ## 问题与修缮
 
@@ -209,7 +209,7 @@ ed.getImagebytes()
   ​    可能因素2：数据太大，接收缓慢，出现内存覆盖
 
   # YOLO后台数据处理
-  
+
   ## kafka数据的存储与读取
 
 
@@ -218,4 +218,4 @@ ed.getImagebytes()
 
 
 
-​		
+​
