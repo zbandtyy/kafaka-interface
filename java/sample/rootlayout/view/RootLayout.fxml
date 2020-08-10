@@ -81,6 +81,7 @@
                   <Font name="Agency FB" size="21.0" />
                </font>
             </Button>
+            <Button fx:id="moreKafkaConfig" layoutX="338.0" layoutY="364.0" mnemonicParsing="false" onMouseClicked="#setMoreKafkaConfigClicked" opacity="0.92" prefHeight="30.0" prefWidth="92.0" style="-fx-background-color: transparent;" text="更多配置" textFill="#2f4a75" underline="true" />
          </children></AnchorPane>
    </children>
 </AnchorPane>

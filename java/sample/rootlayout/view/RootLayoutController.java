@@ -1,26 +1,37 @@
 package sample.rootlayout.view;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import lombok.extern.log4j.Log4j;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import sample.MainApp;
 import sample.rootlayout.model.KafkaAdmin;
 import sample.rootlayout.model.KafkaMsg;
 import sample.rootlayout.model.KafkaMsgConsumer;
-;import java.util.Random;
+import sample.rootlayout.model.ParameterModel;
+;import java.io.IOException;
+import java.util.Collections;
+import java.util.Properties;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
-
+@Log4j
 public class RootLayoutController {
     public Label appNameLabel;
     public ComboBox topicCombox;
     public Label topicLable;
     public TextField groupidTextField;
     public Button resetButton;
-
+    public Button moreKafkaConfig;
     public void setMain(MainApp main) {
         this.main = main;
     }
@@ -37,6 +48,7 @@ public class RootLayoutController {
     boolean enableCheckClicked = true;//响应过程中只进行一次
     @FXML
     private Button checkButton;
+    ObservableList<ParameterModel> valueData = null;
 
     Thread queryThread = null;//查询主题的线程
     @FXML
@@ -46,9 +58,21 @@ public class RootLayoutController {
             String topic = (String) topicCombox.getSelectionModel().getSelectedItem();
             String groupid = groupidTextField.getText();
             KafkaMsgConsumer kafka = new KafkaMsgConsumer(url, topic, groupid);
-            kafka.loadProperties();
 
-            main.showVideoPage(kafka);
+            Properties properties = kafka.loadProperties();
+            log.warn("before\n" + properties);
+            if(valueData != null){
+                for (int i = 0; i < valueData.size(); i++) {
+                    properties.put(valueData.get(i).getParaName().getValue(),valueData.get(i).getParaValue().getValue());
+                }
+                log.warn("after\n" + properties);
+            }
+            if(properties.getProperty("value.deserializer").equals("sample.serial.VideoEventDataKryoDeSerializer")){
+                main.showVideoPage(kafka,"consumerKryo");
+            }else {
+                main.showVideoPage(kafka,"consumer");
+            }
+
         }else{
             topicLable.setText("请先获取选择正确的主题！！！！");
         }
@@ -166,5 +190,19 @@ public class RootLayoutController {
             queryThread.interrupt();
 
         }
+    }
+
+    public void setMoreKafkaConfigClicked(MouseEvent mouseEvent) {
+
+        ParaConfigWindow instance = ParaConfigWindow.getInstance(valueData);
+        valueData =  FXCollections.observableArrayList();
+        valueData.add(new ParameterModel("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer"));
+        valueData.add(new ParameterModel("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer"));
+        instance.setTableData(valueData);
+
+        final Stage dialog = new Stage();
+        Scene dialogScene = new Scene(instance.getAnchorPane(), 300, 200);
+        dialog.setScene(dialogScene);
+        dialog.show();
     }
 }

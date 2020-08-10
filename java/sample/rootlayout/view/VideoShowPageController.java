@@ -93,9 +93,9 @@ public class VideoShowPageController {
                 if(c.wasAdded()){
                     List<? extends Image> imgs = c.getAddedSubList();
                     for(Image img:imgs){
-                        imageView.setFitHeight(bigVideoAnchor.getHeight());
+                        imageView.setFitHeight(bigVideoAnchor.getHeight());//设置大图像的边界高
                         imageView.setFitWidth(bigVideoAnchor.getWidth());
-                        imageView.setPreserveRatio(true);
+                        imageView.setPreserveRatio(true);//图像保持的比率
                         imageView.setImage(img);
 
                     }

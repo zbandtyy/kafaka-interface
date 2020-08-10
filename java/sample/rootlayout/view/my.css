@@ -38,6 +38,11 @@
     -fx-effect: dropshadow(three-pass-box, #698B22, 10.0,0, 0,5);
     -fx-cursor: hand;
   }
+#moreKafkaConfig{
+     background-color:transparent;
+     border-style:none;
+
+}
 /*它用在当用户将鼠标悬停在按钮上时 hover:悬挂*/
 #checkButton:hover{
    -fx-background-color:#FF00FF;

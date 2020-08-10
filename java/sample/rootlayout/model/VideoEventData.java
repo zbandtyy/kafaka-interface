@@ -1,20 +1,28 @@
 package sample.rootlayout.model;
+
 import com.google.gson.Gson;
-import javafx.beans.property.SimpleStringProperty;
+import com.google.gson.JsonSyntaxException;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfByte;
+import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.util.Base64;
 
 /**
  * Java Bean to hold JSON message
  * 输入数据 和 车辆跟踪的结果数据
- * @author abaghel
+ * @author ;;
  *
  */
-public class VideoEventData {
-
+@NoArgsConstructor
+public class VideoEventData implements Serializable {
+	@Setter @Getter
 	private String cameraId;
 
 	public VideoEventData(String cameraId, Timestamp timestamp, int rows, int cols, int type, String data) {
@@ -25,49 +33,63 @@ public class VideoEventData {
 		this.type = type;
 		this.data = data;
 	}
-	public VideoEventData(){}
-	private Timestamp timestamp;
-	private int rows;
-	private int cols;
-	private int type;
-	private String data;
 
-	public String getCameraId() {
-		return cameraId;
-	}
-	public void setCameraId(String cameraId) {
+	public VideoEventData(String cameraId, Timestamp timestamp, int rows, int cols, int type, byte[] jpgImageBytes) {
 		this.cameraId = cameraId;
-	}	
-	public Timestamp getTimestamp() {
-		return timestamp;
-	}
-	public void setTimestamp(Timestamp timestamp) {
 		this.timestamp = timestamp;
-	}
-	public int getRows() {
-		return rows;
-	}
-	public void setRows(int rows) {
 		this.rows = rows;
-	}
-	public int getCols() {
-		return cols;
-	}
-	public void setCols(int cols) {
 		this.cols = cols;
-	}
-	public int getType() {
-		return type;
-	}
-	public void setType(int type) {
 		this.type = type;
+		this.jpgImageBytes = jpgImageBytes;
+		this.data = null;
 	}
-	public String getData() {
-		return data;
-	}
-	public void setData(String data) {
+
+	public VideoEventData(String cameraId, Timestamp timestamp, int rows, int cols, int type, byte[] jpgImageBytes, String data) {
+		this.cameraId = cameraId;
+		this.timestamp = timestamp;
+		this.rows = rows;
+		this.cols = cols;
+		this.type = type;
+		this.jpgImageBytes = jpgImageBytes;
 		this.data = data;
 	}
+	@Setter @Getter
+	private Timestamp timestamp;
+	@Setter @Getter
+	private int rows;
+	@Setter @Getter
+	private int cols;
+	@Setter @Getter
+	private int type;
+	@Setter @Getter
+	private byte[] jpgImageBytes = null;
+	@Setter  @Getter
+	private String data;
+	public byte[] getImagebytes() {
+		if(this.getData() == null){
+			return  jpgImageBytes;
+		}
+
+		//部分数据传送的原始的像素数组
+		byte[] pic = Base64.getDecoder().decode(this.getData());
+		System.out.println("===================");
+	//	System.out.println(pic.length);
+		if(pic.length >= this.getRows()*this.getCols() * 3) {
+
+			Mat frame = new Mat(this.getRows(), this.getCols(), this.getType());
+			frame.put(0, 0, pic);
+			MatOfByte mob = new MatOfByte();
+			Imgcodecs.imencode(".jpg", frame, mob);
+			return mob.toArray();
+		}else {
+			//有的数据传送的是经过jpg压缩的数据
+
+			return pic;
+		}
+
+
+	}
+
 	public String toJson(){
 
 		Gson gson = new Gson();
@@ -80,15 +102,22 @@ public class VideoEventData {
 		String json = gson.toJson(this);
 		return  json;
 	}
-	public static  VideoEventData fromJson(String data){
+	public static VideoEventData fromJson(String data) throws JsonSyntaxException{
 		Gson gson = new Gson();
 		/**
 		 *  <T> T fromJson(String json, Class<T> classOfT)
 		 *  json：被解析的 json 字符串
 		 *  classOfT：解析结果的类型，可以是基本类型，也可以是 POJO 对象类型，gson 会自动转换
 		 */
+		VideoEventData p = null;
+		try {
+			p = gson.fromJson(data, VideoEventData.class);
+          //  System.out.println(p);
 
-		VideoEventData p = gson.fromJson(data, VideoEventData.class);
+
+		}catch ( JsonSyntaxException e){
+			throw new JsonSyntaxException(e.getMessage(),e.getCause());
+		}
 		return p;
 	}
 
@@ -100,27 +129,19 @@ public class VideoEventData {
 				", rows=" + rows +
 				", cols=" + cols +
 				", type=" + type +
-				", data== null'" + Boolean.toString(data == null) + '\'' +
+				", jpgImageBytes=" + (jpgImageBytes==null) +
+				", data='"  + (data == null) + '\'' +
 				'}';
 	}
 
-	public String cvt2String() {
-		SimpleDateFormat d = new SimpleDateFormat("MM-dd hh:mm:ss:SSS");
-		return "VideoEventData{" +
-				"cameraId='" + cameraId + '\'' +
-				", timestamp=" + d.format(timestamp) +
-				", rows=" + rows +
-				", cols=" + cols +
-				", type=" + type +
-				'}';
-	}
 	public static void main(String[] args) {
 		VideoEventData data = new VideoEventData("vid",new Timestamp(12345),3,4,3,"data");
+		System.out.println(data.getData());
 		String s = data.toJson();
 		System.out.println(s);
-
-		VideoEventData d = VideoEventData.fromJson("{\"s\":\"vid\",\"s2\":\"Jan 1, 1970 8:00:12 AM\",\"s3\":3,\"s4\":4}");
+		VideoEventData d = data.fromJson(s);
 		System.out.println(d);
+
 	}
 }
 

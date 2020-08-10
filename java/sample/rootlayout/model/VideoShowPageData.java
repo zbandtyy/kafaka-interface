@@ -70,7 +70,7 @@ public class VideoShowPageData {
             return false;
         }
         valc.getImgList().add(new Image(new ByteArrayInputStream(img)));
-        valc.setInfo(data.cvt2String());
+        valc.setInfo(data.toString());
         return  true;
     }
 

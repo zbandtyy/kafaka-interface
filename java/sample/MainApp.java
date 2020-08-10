@@ -43,14 +43,19 @@ public class MainApp extends Application {
 
     }
     //显示读取并且显示数据的页面，并且创建后台线程读取消息
-    public void showVideoPage(KafkaMsgConsumer kafkaMsgConsumer){
+    public void showVideoPage(KafkaMsgConsumer kafkaMsgConsumer,String methodName){
         //1.创建后台线程处理kafka数据
 
         Thread rcvDataThread = null;
         Task<Integer> task = new Task<Integer>() {
             @Override
             protected Integer call()  {
-                kafkaMsgConsumer.consumer();
+                if(methodName.equals("consumer")) {
+                    System.out.println("consumer");
+                    kafkaMsgConsumer.consumer();
+                }else {
+                    kafkaMsgConsumer.consumerKryo();
+                }
                 return  0;
             }
         };
@@ -67,7 +72,7 @@ public class MainApp extends Application {
             page = (AnchorPane) loader.load();
             MaintainInterfaceController mic = loader.getController();
             mic.heightProperty().addListener((observableValue,oldvalue,newvalue)->{primaryStage.setHeight(newvalue.intValue());});
-           mic.setConsumer(kafkaMsgConsumer);
+            mic.setConsumer(kafkaMsgConsumer);
             Scene scene = new Scene(page);
             primaryStage.titleProperty().bind(kafkaMsgConsumer.getAllConfig());
             //设置返回登录界面重新连接的示图

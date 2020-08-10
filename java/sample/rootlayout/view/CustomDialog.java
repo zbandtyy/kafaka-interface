@@ -51,4 +51,6 @@ public class CustomDialog {
         alert.setHeaderText(text);
         alert.showAndWait();
     }
+
+
 }
